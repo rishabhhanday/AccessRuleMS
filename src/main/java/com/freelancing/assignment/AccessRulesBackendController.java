@@ -2,6 +2,8 @@ package com.freelancing.assignment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
+@Slf4j
 public class AccessRulesBackendController {
+    @Autowired
+    private AccessRuleRepository accessRuleRepository;
 
     @GetMapping
     ResponseEntity<List<AccessRuleEntity>> addDeleteData(@RequestBody ManageRestrictionRequest manageRestrictionRequest) throws JsonProcessingException {
@@ -173,6 +178,12 @@ public class AccessRulesBackendController {
             }
         }
 
+        accessRuleRepository.saveAll(accessRuleEntityList);
         return accessRuleEntityList;
+    }
+
+    @GetMapping("/access")
+    List<AccessRuleEntity> accessRuleEntityList() {
+        return accessRuleRepository.findAll();
     }
 }
